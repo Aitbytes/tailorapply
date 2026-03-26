@@ -1,0 +1,46 @@
+---
+interface Props {
+  appName: string;
+}
+
+const { appName } = Astro.props;
+---
+
+<header class="fixed top-0 left-0 right-0 z-50 bg-surface/80 backdrop-blur-md border-b border-gray-200/50">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16 sm:h-20">
+      <!-- Logo / Brand -->
+      <a href="/" class="flex items-center gap-2 group" aria-label="TailorApply home">
+        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-primary flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-200">
+          <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <line x1="10" y1="9" x2="8" y2="9"/>
+          </svg>
+        </div>
+        <span class="font-heading font-semibold text-lg sm:text-xl text-primary">
+          Tailor<span class="text-accent">Apply</span>
+        </span>
+      </a>
+
+      <!-- Nav link (desktop) -->
+      <nav class="hidden sm:flex items-center gap-8" aria-label="Main navigation">
+        <a href="#how-it-works" class="text-sm font-medium text-text-muted hover:text-primary transition-colors duration-200">How It Works</a>
+        <a href="#faq" class="text-sm font-medium text-text-muted hover:text-primary transition-colors duration-200">FAQ</a>
+      </nav>
+
+      <!-- CTA (desktop) -->
+      <a
+        href="#join"
+        class="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent text-white text-sm font-semibold hover:opacity-90 hover:scale-[1.02] active:scale-95 transition-all duration-200 shadow-cta"
+      >
+        Join Waitlist
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</header>

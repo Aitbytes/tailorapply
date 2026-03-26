@@ -1,0 +1,54 @@
+---
+interface Props {
+  appName: string;
+}
+
+const { appName } = Astro.props;
+
+const valueProps = [
+  {
+    icon: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+    title: "30–90 Minutes → 5 Minutes",
+    description: "These companies expect unique resumes when you're applying to jobs full time. It's wild. Who has the time? TailorApply eliminates the customization grind — paste a job description, get a tailored resume in minutes, not hours.",
+  },
+  {
+    icon: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>`,
+    title: "Your Words, Not AI Gibberish",
+    description: "The main issue is that it rewrites to a point where it adds false information. We don't generate — we reposition. Your actual experience, mapped to their exact keywords. No hallucinations. No padding. No looking like you borrowed their posting.",
+  },
+  {
+    icon: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>`,
+    title: "Finally Beat the ATS Robot",
+    description: "The job description asked for 'Client Relationship Management' and I had 'Account Handling.' To a human, it's the same. To the ATS filter, it's not. TailorApply bridges that gap — matching your real skills to the exact language the robot expects.",
+  },
+];
+---
+
+<section class="py-16 sm:py-24 px-4 bg-surface">
+  <div class="max-w-6xl mx-auto">
+    <div class="grid sm:grid-cols-3 gap-8 sm:gap-10">
+      {valueProps.map((prop, i) => (
+        <div
+          class="flex flex-col items-start text-left group"
+          data-reveal
+          data-reveal-delay={String(i + 1)}
+        >
+          <!-- Icon -->
+          <div class="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-5 group-hover:bg-primary/15 transition-colors duration-200 flex-shrink-0">
+            <Fragment set:html={prop.icon} />
+          </div>
+
+          <!-- Title -->
+          <h3 class="font-heading text-lg font-semibold text-primary mb-3 leading-snug">
+            {prop.title}
+          </h3>
+
+          <!-- Description -->
+          <p class="text-text-muted text-sm leading-relaxed">
+            {prop.description}
+          </p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

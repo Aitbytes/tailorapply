@@ -1,0 +1,42 @@
+---
+interface Props {
+  appName: string;
+}
+
+const { appName } = Astro.props;
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="bg-background border-t border-gray-200/60">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
+      <!-- Brand -->
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-xl bg-primary flex items-center justify-center">
+          <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <line x1="10" y1="9" x2="8" y2="9"/>
+          </svg>
+        </div>
+        <span class="font-heading font-semibold text-lg text-primary">
+          Tailor<span class="text-accent">Apply</span>
+        </span>
+      </div>
+
+      <!-- Links -->
+      <nav class="flex items-center gap-6 text-sm text-text-muted" aria-label="Footer navigation">
+        <a href="#how-it-works" class="hover:text-primary transition-colors duration-200">How It Works</a>
+        <a href="#faq" class="hover:text-primary transition-colors duration-200">FAQ</a>
+        <a href="#join" class="hover:text-primary transition-colors duration-200">Join Waitlist</a>
+      </nav>
+
+      <!-- Copyright -->
+      <p class="text-sm text-text-muted">
+        &copy; {currentYear} TailorApply. All rights reserved.
+      </p>
+    </div>
+  </div>
+</footer>

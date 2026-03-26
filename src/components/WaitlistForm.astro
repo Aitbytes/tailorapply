@@ -1,0 +1,158 @@
+---
+// ─── WaitlistForm ────────────────────────────────────────────────────────────
+// Handles waitlist signup with the shared backend API
+//
+// Props:
+//   projectName   (required) — kebab-case, e.g. "tailorapply"
+//   buttonText    (optional) — defaults to "Join the Waitlist"
+//   incentiveText (optional) — shown below form
+//   variant       (optional) — "hero" | "cta" (default: "hero")
+//   formId        (optional) — unique id per form (default: "waitlist")
+// ─────────────────────────────────────────────────────────────────────────────
+
+interface Props {
+  projectName: string;
+  buttonText?: string;
+  incentiveText?: string;
+  variant?: "hero" | "cta";
+  formId?: string;
+}
+
+const {
+  projectName,
+  buttonText = "Join the Waitlist",
+  incentiveText,
+  variant = "hero",
+  formId = "waitlist",
+} = Astro.props;
+
+const inputClass =
+  "w-full px-4 py-3.5 rounded-xl border-2 border-transparent bg-white/90 text-text-main placeholder-text-muted focus:outline-none focus:border-primary transition-all duration-200 shadow-sm text-base";
+
+const buttonClass =
+  variant === "cta"
+    ? "w-full sm:w-auto px-8 py-3.5 rounded-xl bg-accent text-white font-semibold hover:opacity-90 hover:scale-[1.02] active:scale-95 transition-all duration-200 whitespace-nowrap shadow-cta text-base"
+    : "w-full sm:w-auto px-8 py-3.5 rounded-xl bg-primary text-white font-semibold hover:opacity-90 hover:scale-[1.02] active:scale-95 transition-all duration-200 whitespace-nowrap text-base";
+---
+
+<form
+  class="waitlist-form flex flex-col sm:flex-row gap-3 justify-center items-stretch sm:items-center w-full max-w-md mx-auto"
+  data-form-id={formId}
+  data-app-name={projectName}
+  data-button-text={buttonText}
+  novalidate
+>
+  <input
+    type="email"
+    placeholder="Enter your email address"
+    required
+    autocomplete="email"
+    class={inputClass}
+    aria-label="Email address"
+  />
+  <button
+    type="submit"
+    class={buttonClass}
+    aria-label={buttonText}
+  >
+    {buttonText}
+  </button>
+</form>
+
+<!-- Message element — shown after submit -->
+<p
+  id={`message-${formId}`}
+  class="text-sm text-center mt-3 hidden"
+  role="status"
+  aria-live="polite"
+></p>
+
+{incentiveText && (
+  <p class="text-sm text-text-muted text-center mt-3 leading-relaxed">
+    {incentiveText}
+  </p>
+)}
+
+<script>
+  const API_URL = "https://api-goldmine.aitbytes.dev";
+
+  function initWaitlistForms() {
+    document
+      .querySelectorAll<HTMLFormElement>(".waitlist-form")
+      .forEach((form) => {
+        if (form.dataset.initialized) return;
+        form.dataset.initialized = "true";
+
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const emailInput = form.querySelector<HTMLInputElement>("input[type='email']");
+          const email = emailInput?.value?.trim();
+          const formId = form.dataset.formId;
+          const appName = form.dataset.appName;
+          const originalButtonText = form.dataset.buttonText || "Join the Waitlist";
+          const messageEl = document.getElementById(`message-${formId}`);
+          const button = form.querySelector<HTMLButtonElement>("button[type='submit']");
+
+          if (!email || !appName) return;
+
+          // Email validation
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(email)) {
+            if (messageEl) {
+              messageEl.textContent = "Please enter a valid email address.";
+              messageEl.className = "text-sm text-center mt-3 text-red-600 font-medium";
+            }
+            emailInput?.focus();
+            return;
+          }
+
+          // Loading state
+          if (button) {
+            button.disabled = true;
+            button.textContent = "Joining\u2026";
+          }
+          if (messageEl) {
+            messageEl.className = "text-sm text-center mt-3 hidden";
+          }
+
+          try {
+            const res = await fetch(`${API_URL}/api/join-waitlist`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email, projectName: appName }),
+            });
+
+            if (res.ok) {
+              if (messageEl) {
+                messageEl.textContent = "You're on the list! We'll be in touch soon.";
+                messageEl.className = "text-sm text-center mt-3 text-success font-medium";
+              }
+              form.reset();
+            } else {
+              let errorMsg = "Something went wrong. Please try again.";
+              try {
+                const data = await res.json();
+                if (data?.error) errorMsg = data.error;
+              } catch {}
+              throw new Error(errorMsg);
+            }
+          } catch (err) {
+            if (messageEl) {
+              messageEl.textContent =
+                err instanceof Error ? err.message : "Something went wrong. Please try again.";
+              messageEl.className = "text-sm text-center mt-3 text-red-600 font-medium";
+            }
+          } finally {
+            if (button) {
+              button.disabled = false;
+              button.textContent = originalButtonText;
+            }
+          }
+        });
+      });
+  }
+
+  document.addEventListener("DOMContentLoaded", initWaitlistForms);
+  document.addEventListener("astro:page-load", initWaitlistForms);
+</script>
